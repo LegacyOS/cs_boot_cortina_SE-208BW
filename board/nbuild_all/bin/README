@@ -1,0 +1,3 @@
+redboot.bin : redboot 상에서 사용되는 Image
+
+lepus_linux_SL0AN_P16M.bin : 실제 BootLoader 이미지, dd로 전체 쓸때는 이것으로 써야 한다.

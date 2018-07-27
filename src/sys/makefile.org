@@ -1,0 +1,48 @@
+#-----------------------------------------------------------------------------
+MODULE 		:= 	sys
+#-----------------------------------------------------------------------------
+
+include $(PACKAGE_ENV)/environment.mak
+#CFLAGS 			:= $(BASIC_CFLAGS) -DNO_ERRNO_H
+CFLAGS 				:= $(BASIC_CFLAGS) -DNO_ERRNO_H
+LDFLAGS 			:= $(BASIC_LFLAGS)
+INCLUDE_PATH 		:= -I. $(foreach dir,$(INCPATH),-I$(dir))
+LIBRARY 			:= 	lib$(MODULE).a
+SYS_START_OBJ_FILE  :=  sys_start.o
+#-----------------------------------------------------------------------------
+FILES 			:= 	sys_main.c		\
+					sys_fis.c		\
+					sys_vctl.c		\
+					sys_cfg.c		\
+					sys_string.c	\
+					sys_malloc.c	\
+					sys_timer.c		\
+					sys_crc16.c		\
+					sys_printf.c		\
+					astel/astel.c	\
+					astel/libAst.c	\
+					astel/tw286x.c	\
+					astel/i2c_poll.c	\
+            		astel/display.c	\ 
+					astel/osdDisplay.c	\
+					astel/osdCharInfo.c	\
+					astel/osdIconInfo.c	\ 
+            		astel/mdin380.c	\
+					astel/mdin3xx.c	\
+					astel/mdincoef.c	\
+					astel/mdinfrmt.c	\
+					astel/mdinhtx.c	\
+					astel/mdinipc.c	\
+					astel/mdinpci.c \ 
+	            	astel/mdin380Osg.c	\
+					astel/mdinaux.c	\
+					astel/mdincur.c	\
+					astel/mdini2c.c \
+					astel/mdinosd.c	\
+					astel/mdingac.c	\
+					trap.S			
+#-----------------------------------------------------------------------------
+
+include $(PACKAGE_ENV)/compiler.mak
+build: $(BOARD_FOLDER)/obj/$(MODULE)/$(LIBRARY).stamp
+

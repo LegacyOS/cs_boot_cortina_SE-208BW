@@ -1,0 +1,62 @@
+/***************************************************************************
+ * Copyright  Storlink Corp 2005.  All rights reserved.                
+ *--------------------------------------------------------------------------
+ * Name			: board_version.h
+ * Description	: 
+ *		Define version message
+ *
+ * History
+ *
+ *	Date		Writer		Description			
+ *	-----------	-----------	-------------------------------------------------
+ *	04/20/2005	Gary Chen	Create 0.0.1
+ *	12/27/2005      Middle		Create 0.0.2   Add lepus gmac code & over write function.
+ *      12/28/2005  	Middle		Create 0.0.2   Combine over write & create image function.
+ *: 										   And disable & enable mac during flash prog.
+ *      01/05/2006	Middle		Create 0.0.3   Modify Reboot issue. And LPC.
+ *	03/27/2006	Gary Chen	Create 0.0.5	Gary add boot from IDE for Gemini board.
+ *	04/03/2006	Middle		Create 0.0.6	Modify IDE detect flow.
+ *	04/13/2006	Midlde		Create 0.0.7	Modify gmac status always in 100M Full link	status
+ *	04/19/2006	Middle		Create 0.0.8	Modify flash layout.
+ *	04/25/2006	Gary Chen	Create 0.0.9	Modify emac deliver to get link status.
+ *	04/25/2006	Midlde		Create 0.0.10	Modify data length of fis.
+ *	04/25/2006	Midlde		Create 0.0.11	Modify lepus asic config and modify gmac config
+ *											reboot flag for lepus
+ *											Boot from SATA_IDE(mode 2 -> mode 3) 
+ *	06/21/2006	Midlde		Create 0.0.12	Combine all flash type boot
+ *	06/29/2006	Middle		Create 1.0.0	Change version and flash not to compare data.
+ *	06/29/2006	Middle		Create 1.0.1	Add RG code. For RG_board use gmac1, and other use gmac0.
+ *	06/29/2006	Middle		Create 1.0.2	Modify switch setting & add cir/power ctrl.	
+ *  08/28/2006	Middle		Create 1.0.3	Change flash map to fit 16M	
+ *  09/29/2006	Middle		Create 1.0.4	Change DRAM Driving Capability (global ((0x08->|0x3000)& (0x10&0XFFF))	
+ *  10/11/2006	Middle		Create 1.0.5	Change flash map -> resize vctl & FIS to 128k	
+ *  11/13/2006	Middle		Create 1.0.6	Don't update fis after firmware upgrade.  
+ *	12/13/2006	Middle		Create 1.0.7	Add init DRAM 16 bits for sl3512 board. & when a0 board set prefetch reg 1.
+ *	01/05/2007	Middle		Create 1.0.8	when C0(a0, no more a0 board, use c0) board set prefetch reg 1 and the others set 0..
+ *	01/08/2007	Middle		Create 1.0.9	No more 3516(64MB, 16bits), just 3512(64MB, 16bits) & 3516(128MB, 32bits)
+ *	03/27/2007	Middle		Create 1.1.0	combine vbus code
+ *	04/04/2007	Middle		Create 1.1.1	remove USB device mode menu 
+ *	04/19/2007	Middle		Create 1.1.2	change usb device mode source code directory
+ *	05/08/2007	Middle		Create 1.1.3	Modify get image name before init HD for boot from HD.
+ *	06/22/2007	Middle		Create 1.2.0	modify flashmap for two CPU. modify check usb device mode with check host/device mode and vbus bit, then move flash init fis vctl and get sys config position. 	 
+ *	09/17/2007	Jason			Create 1.2.1	speed up usb device mode(software pipeline in read_dma)
+ *	10/29/2007	Middle		Create 1.2.2	modify code to enable sata hot plug to detect 1000G HD & dram init use 0x83A8C7FF.
+ *	11/05/2007	Jason 		Create 1.2.3	Disable speed up usb device mode(software pipeline in read_dma) to avoid data error.
+ *	11/15/2007	Jason 		Create 1.2.4	Enable speed up usb device mode(software pipeline in read/write dma).
+ *	01/08/2008	Jason 		Create 1.2.5	ADD RAID1 & jbod for das mode.
+ *	06/04/2008	Jason 		Create 1.2.6	ADD SATA_LED.
+ *	06/26/2008	Middle 		Create 1.2.6.1	Due to a schematic error in MDC/MDIO, use switch for lan port, special version.
+ *	07/18/2008	Middle 		Create 1.2.7	add web upgrade for flash.
+ *	07/18/2008	Middle 		Create 1.2.8	add read flash fis for flash map.
+ *	09/04/2008	Middle 		Create 1.3.0	Modify name to Cortina.
+ *																			Add modify gateway
+ *	10/07/2008	Middle 		Create 1.3.1	Add check fis data for 2cpu(64:64 & 96:32), 2cpu code can work normally according to fis data. 
+ ****************************************************************************/
+#ifndef _BOARD_VERSION_H
+#define _BOARD_VERSION_H
+
+#define BOARD_SW_VERSION	"1.3.1_HDBOOT"
+
+#endif // _BOARD_VERSION_H
+
+

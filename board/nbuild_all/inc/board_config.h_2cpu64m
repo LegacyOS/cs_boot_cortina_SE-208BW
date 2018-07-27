@@ -1,0 +1,134 @@
+/****************************************************************************
+ * Copyright  Cortina-systems 2005.  All rights reserved.                
+ *--------------------------------------------------------------------------
+ * Name			: board_config.h
+ * Description	: 
+ *		Define board-dependent configuration, including
+ *		software configuration:
+ *			(1) default MAC address,....
+ *		hardware setting,
+ *			(1) Clock rate
+ *			(2) DRAM size and memory map
+ *			(3) Flash Size and memory map
+ *
+ * History
+ *
+ *	Date		Writer		Description
+ *	-----------	-----------	-------------------------------------------------
+ *	04/18/2005	Gary Chen	Create
+ *
+ ****************************************************************************/
+#ifndef _BOARD_CONFIG_H
+#define _BOARD_CONFIG_H
+
+#include <board_com.h>
+
+#define BOARD_SUPPORT_TWO_CPU                   1		
+// for 128MB DRAM
+#define CPU2_RAM_SIZE                           32 //64
+#define CPU2_RAM_BASE                           (96<<20)//(64<<20)
+// for 64MB DRAM
+//#define CPU2_RAM_SIZE                           33
+//#define CPU2_RAM_BASE                           (32<<20)
+#define CPU2_FLASH_LOCATION                       0x7D00000
+#define CPU2_RAM_LOCATION          (JPEG_RAM_LOCATION + 0x40)
+#define JPEG_MAX_SIZE                           (3 * 1024 * 1024)
+#define MEM_MAP_CPU1_TO_CPU2(x)         (x - CPU2_RAM_BASE)
+#define BOARD_DRAM_CPU2_ADDR		CPU2_RAM_BASE
+#define BOARD_DRAM_SIZE					128 * 1024 * 1024 //128M
+#define BOARD_BOOT2_MALLOC_SIZE			((20+64) * 1024 * 1024)	
+//boot from flash
+#define BOARD_SUPPORT_FIS				1
+
+#define BOARD_NAND_BOOT				1
+	#ifdef BOARD_NAND_BOOT
+	//	#define	BOARD_SUPPORT_YAFFS2	1
+	#define	BOARD_SUPPORT_SOFTECC 1
+	#endif 
+	
+
+#define BOARD_FLASH_SIZE				(64 * 1024 * 1024)		//flash size 16 M
+
+#define BOARD_FLASH_BOOTIMG_SIZE		(4 * 64 * 1024)	// include BOOT-1 & BOOT-2
+#define BOARD_FLASH_BOOT_SIZE			(0x100000)	// include BOOT-1 & BOOT-2
+
+#define BOARD_FLASH_BOOT1_ADDR			BOARD_FLASH_BOOT_ADDR
+#define BOARD_FLASH_BOOT1_SIZE			(4 * 1024)	
+#define BOARD_FLASH_BOOT2_ADDR			(BOARD_FLASH_BOOT1_ADDR + BOARD_FLASH_BOOT1_SIZE)
+#define BOARD_FLASH_BOOT2_SIZE			(BOARD_FLASH_BOOTIMG_SIZE - BOARD_FLASH_BOOT1_SIZE)
+
+
+#define BOARD_FLASH_KERNEL_ADDR			(BOARD_FLASH_BASE_ADDR + 0x100000)
+#define BOARD_KERNELIMG_SIZE			(0x00200000)
+#define BOARD_KERNEL_SIZE				(0x00400000)
+
+#define BOARD_FLASH_RAM_DISK_ADDR		(BOARD_FLASH_BASE_ADDR + 0x500000)
+#define BOARD_RAM_DISKIMG_SIZE			(0x00600000)
+#define BOARD_RAM_DISK_SIZE				(0x00900000)
+
+#define BOARD_FLASH_APPS_ADDR			(BOARD_FLASH_BASE_ADDR + 0xE00000)
+#define BOARD_APPSIMG_SIZE				(0x00600000)
+#define BOARD_APPS_SIZE					(0x00900000)
+
+#define BOARD_FLASH_CPU2_ADDR			(BOARD_FLASH_BASE_ADDR + 0x1700000)
+#define BOARD_CPU2IMG_SIZE				(0x200000)
+#define BOARD_CPU2_SIZE					(0x300000)
+
+#define BOARD_FLASH_CPU2_RD_ADDR		(BOARD_FLASH_BASE_ADDR + 0x1A00000)
+#define BOARD_CPU2_RDIMG_SIZE			(0x400000)
+#define BOARD_CPU2_RD_SIZE				(0x600000)
+
+#define BOARD_FLASH_CONFIG_ADDR			(BOARD_FLASH_BASE_ADDR + 0x2000000)
+#define BOARD_FLASH_CONFIGIMG_SIZE		(0x200000)
+#define BOARD_FLASH_CONFIG_SIZE			(0x400000)
+
+#define BOARD_ECOS_ADDR					(BOARD_FLASH_BASE_ADDR + 0x2400000)
+#define BOARD_ECOSIMG_SIZE				(0x200000)
+#define BOARD_ECOS_SIZE					(0x400000)
+
+#define BOARD_FLASH_VCTL_ADDR			(BOARD_FLASH_BASE_ADDR + 0x2800000)
+#define BOARD_FLASH_VCTLIMG_SIZE		(0x200000)
+#define BOARD_FLASH_VCTL_SIZE			(0x400000)
+
+#define BOARD_FLASH_FIS_ADDR			(BOARD_FLASH_BASE_ADDR + 0x2C00000)
+#define BOARD_FLASH_FISIMG_SIZE			(0x200000)
+#define BOARD_FLASH_FIS_SIZE			(0x400000)
+
+#define BOARD_RESV_ADDR					(BOARD_FLASH_BASE_ADDR + 0x3000000)
+#define BOARD_RESVIMG_SIZE				(0x1000000)
+#define BOARD_RESV_SIZE					(0x1000000)
+		
+
+
+
+
+// DRAM memory Map
+///		+--------------------------+
+//      |  		             	   |
+//      |                          |
+//		+--------------------------+
+//		|	  		BOOT2          |  The location could not use 0
+//      |     memory allocation    |  The size must be more large then kernel size
+//		|           area           |  
+//      |   	                   |
+//      |                          |
+//		+--------------------------+
+//      |          BOOT2           | 
+//      |       code + data        |
+//		|                          |
+//      |     			       	   |
+//      |                          |
+//		+--------------------------+
+//      
+
+
+//#define BOARD_BOOT2_MALLOC_SIZE			(32 * 1024 * 1024)
+
+
+
+
+
+
+#endif // _BOARD_CONFIG_H
+
+

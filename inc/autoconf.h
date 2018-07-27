@@ -1,0 +1,1125 @@
+/*
+ * Automatically generated C config: don't edit
+ * Linux kernel version: 2.6.15
+ * Thu Oct 25 18:12:23 2007
+ */
+#define AUTOCONF_INCLUDED
+#define CONFIG_ARM 1
+#define CONFIG_MMU 1
+#define CONFIG_UID16 1
+#define CONFIG_RWSEM_GENERIC_SPINLOCK 1
+#define CONFIG_GENERIC_CALIBRATE_DELAY 1
+
+/*
+ * Code maturity level options
+ */
+#define CONFIG_EXPERIMENTAL 1
+#define CONFIG_CLEAN_COMPILE 1
+#define CONFIG_BROKEN_ON_SMP 1
+#define CONFIG_INIT_ENV_ARG_LIMIT 32
+
+/*
+ * General setup
+ */
+#define CONFIG_LOCALVERSION ""
+#define CONFIG_LOCALVERSION_AUTO 1
+#define CONFIG_SWAP 1
+#define CONFIG_SYSVIPC 1
+#undef CONFIG_POSIX_MQUEUE
+#undef CONFIG_BSD_PROCESS_ACCT
+#define CONFIG_SYSCTL 1
+#undef CONFIG_AUDIT
+#define CONFIG_HOTPLUG 1
+#define CONFIG_KOBJECT_UEVENT 1
+#define CONFIG_IKCONFIG 1
+#undef CONFIG_IKCONFIG_PROC
+#define CONFIG_INITRAMFS_SOURCE ""
+#undef CONFIG_CC_OPTIMIZE_FOR_SIZE
+#define CONFIG_EMBEDDED 1
+#define CONFIG_KALLSYMS 1
+#undef CONFIG_KALLSYMS_ALL
+#undef CONFIG_KALLSYMS_EXTRA_PASS
+#define CONFIG_PRINTK 1
+#define CONFIG_BUG 1
+#define CONFIG_BASE_FULL 1
+#define CONFIG_FUTEX 1
+#define CONFIG_EPOLL 1
+#define CONFIG_SHMEM 1
+#define CONFIG_CC_ALIGN_FUNCTIONS 0
+#define CONFIG_CC_ALIGN_LABELS 0
+#define CONFIG_CC_ALIGN_LOOPS 0
+#define CONFIG_CC_ALIGN_JUMPS 0
+#undef CONFIG_TINY_SHMEM
+#define CONFIG_BASE_SMALL 0
+
+/*
+ * Loadable module support
+ */
+#define CONFIG_MODULES 1
+#undef CONFIG_MODULE_UNLOAD
+#define CONFIG_OBSOLETE_MODPARM 1
+#undef CONFIG_MODVERSIONS
+#undef CONFIG_MODULE_SRCVERSION_ALL
+#undef CONFIG_KMOD
+
+/*
+ * Block layer
+ */
+#undef CONFIG_LBD
+
+/*
+ * IO Schedulers
+ */
+#define CONFIG_IOSCHED_NOOP 1
+#undef CONFIG_IOSCHED_AS
+#define CONFIG_IOSCHED_DEADLINE 1
+#undef CONFIG_IOSCHED_CFQ
+#undef CONFIG_DEFAULT_AS
+#define CONFIG_DEFAULT_DEADLINE 1
+#undef CONFIG_DEFAULT_CFQ
+#undef CONFIG_DEFAULT_NOOP
+#define CONFIG_DEFAULT_IOSCHED "deadline"
+
+/*
+ * System Type
+ */
+#undef CONFIG_ARCH_CLPS7500
+#undef CONFIG_ARCH_CLPS711X
+#undef CONFIG_ARCH_CO285
+#undef CONFIG_ARCH_EBSA110
+#undef CONFIG_ARCH_CAMELOT
+#define CONFIG_ARCH_SL2312 1
+#undef CONFIG_ARCH_FOOTBRIDGE
+#undef CONFIG_ARCH_INTEGRATOR
+#undef CONFIG_ARCH_IOP3XX
+#undef CONFIG_ARCH_IXP4XX
+#undef CONFIG_ARCH_IXP2000
+#undef CONFIG_ARCH_L7200
+#undef CONFIG_ARCH_PXA
+#undef CONFIG_ARCH_RPC
+#undef CONFIG_ARCH_SA1100
+#undef CONFIG_ARCH_S3C2410
+#undef CONFIG_ARCH_SHARK
+#undef CONFIG_ARCH_LH7A40X
+#undef CONFIG_ARCH_OMAP
+#undef CONFIG_ARCH_VERSATILE
+#undef CONFIG_ARCH_REALVIEW
+#undef CONFIG_ARCH_IMX
+#undef CONFIG_ARCH_H720X
+#undef CONFIG_ARCH_AAEC2000
+
+/*
+ * SL2312
+ */
+#define CONFIG_SL3516_ASIC 1
+#undef CONFIG_PCI
+#undef CONFIG_SL2312_LPC
+#define CONFIG_SL2312_USB 1
+#undef CONFIG_GEMINI_IPI
+
+/*
+ * Processor Type
+ */
+#define CONFIG_CPU_32 1
+#define CONFIG_CPU_FA526 1
+#define CONFIG_CPU_32v4 1
+#define CONFIG_CPU_ABRT_EV4 1
+#define CONFIG_CPU_CACHE_VIVT 1
+#define CONFIG_CPU_CACHE_FA 1
+#define CONFIG_CPU_COPY_FA 1
+#define CONFIG_CPU_FA_BTB 1
+#define CONFIG_CPU_TLB_FA 1
+
+/*
+ * Processor Features
+ */
+#undef CONFIG_CPU_ICACHE_DISABLE
+#undef CONFIG_CPU_DCACHE_DISABLE
+#undef CONFIG_CPU_DCACHE_WRITETHROUGH
+
+/*
+ * Bus support
+ */
+#define CONFIG_ISA_DMA_API 1
+
+/*
+ * PCCARD (PCMCIA/CardBus) support
+ */
+#undef CONFIG_PCCARD
+
+/*
+ * Kernel Features
+ */
+#undef CONFIG_PREEMPT
+#undef CONFIG_NO_IDLE_HZ
+#undef CONFIG_ARCH_DISCONTIGMEM_ENABLE
+#define CONFIG_SELECT_MEMORY_MODEL 1
+#define CONFIG_FLATMEM_MANUAL 1
+#undef CONFIG_DISCONTIGMEM_MANUAL
+#undef CONFIG_SPARSEMEM_MANUAL
+#define CONFIG_FLATMEM 1
+#define CONFIG_FLAT_NODE_MEM_MAP 1
+#undef CONFIG_SPARSEMEM_STATIC
+#define CONFIG_SPLIT_PTLOCK_CPUS 4096
+#define CONFIG_ALIGNMENT_TRAP 1
+
+/*
+ * Boot options
+ */
+#define CONFIG_ZBOOT_ROM_TEXT 0x0
+#define CONFIG_ZBOOT_ROM_BSS 0x0
+#define CONFIG_CMDLINE "root=/dev/ram0 rw console=ttySL0,19200 initrd=0x00800000,16M ramdisk_size=16384"
+#undef CONFIG_XIP_KERNEL
+
+/*
+ * Floating point emulation
+ */
+
+/*
+ * At least one emulation must be selected
+ */
+#undef CONFIG_FPE_NWFPE
+#undef CONFIG_FPE_FASTFPE
+
+/*
+ * Userspace binary formats
+ */
+#define CONFIG_BINFMT_ELF 1
+#undef CONFIG_BINFMT_AOUT
+#undef CONFIG_BINFMT_MISC
+#undef CONFIG_ARTHUR
+
+/*
+ * Power management options
+ */
+#undef CONFIG_PM
+
+/*
+ * Networking
+ */
+#define CONFIG_NET 1
+
+/*
+ * Networking options
+ */
+#define CONFIG_PACKET 1
+#define CONFIG_PACKET_MMAP 1
+#define CONFIG_UNIX 1
+#undef CONFIG_NET_KEY
+#define CONFIG_INET 1
+#define CONFIG_IP_MULTICAST 1
+#define CONFIG_IP_ADVANCED_ROUTER 1
+#define CONFIG_ASK_IP_FIB_HASH 1
+#undef CONFIG_IP_FIB_TRIE
+#define CONFIG_IP_FIB_HASH 1
+#undef CONFIG_IP_MULTIPLE_TABLES
+#undef CONFIG_IP_ROUTE_MULTIPATH
+#undef CONFIG_IP_ROUTE_VERBOSE
+#undef CONFIG_IP_PNP
+#undef CONFIG_NET_IPIP
+#undef CONFIG_NET_IPGRE
+#undef CONFIG_IP_MROUTE
+#undef CONFIG_ARPD
+#undef CONFIG_SYN_COOKIES
+#undef CONFIG_INET_AH
+#undef CONFIG_INET_ESP
+#undef CONFIG_INET_IPCOMP
+#undef CONFIG_INET_TUNNEL
+#undef CONFIG_INET_DIAG
+#undef CONFIG_TCP_CONG_ADVANCED
+#define CONFIG_TCP_CONG_BIC 1
+#undef CONFIG_IPV6
+#undef CONFIG_NETFILTER
+
+/*
+ * DCCP Configuration (EXPERIMENTAL)
+ */
+#undef CONFIG_IP_DCCP
+
+/*
+ * SCTP Configuration (EXPERIMENTAL)
+ */
+#undef CONFIG_IP_SCTP
+#undef CONFIG_ATM
+#undef CONFIG_BRIDGE
+#define CONFIG_VLAN_8021Q 1
+#undef CONFIG_DECNET
+#undef CONFIG_LLC2
+#undef CONFIG_IPX
+#undef CONFIG_ATALK
+#undef CONFIG_X25
+#undef CONFIG_LAPB
+#undef CONFIG_NET_DIVERT
+#undef CONFIG_ECONET
+#undef CONFIG_WAN_ROUTER
+
+/*
+ * QoS and/or fair queueing
+ */
+#define CONFIG_NET_SCHED 1
+#define CONFIG_NET_SCH_CLK_JIFFIES 1
+#undef CONFIG_NET_SCH_CLK_GETTIMEOFDAY
+#undef CONFIG_NET_SCH_CLK_CPU
+
+/*
+ * Queueing/Scheduling
+ */
+#define CONFIG_NET_SCH_CBQ_MODULE 1
+#define CONFIG_NET_SCH_HTB_MODULE 1
+#undef CONFIG_NET_SCH_HFSC
+#define CONFIG_NET_SCH_PRIO_MODULE 1
+#define CONFIG_NET_SCH_RED_MODULE 1
+#define CONFIG_NET_SCH_SFQ_MODULE 1
+#define CONFIG_NET_SCH_TEQL_MODULE 1
+#define CONFIG_NET_SCH_TBF_MODULE 1
+#define CONFIG_NET_SCH_GRED_MODULE 1
+#define CONFIG_NET_SCH_DSMARK_MODULE 1
+#undef CONFIG_NET_SCH_NETEM
+#define CONFIG_NET_SCH_INGRESS_MODULE 1
+
+/*
+ * Classification
+ */
+#define CONFIG_NET_CLS 1
+#undef CONFIG_NET_CLS_BASIC
+#define CONFIG_NET_CLS_TCINDEX_MODULE 1
+#define CONFIG_NET_CLS_ROUTE4_MODULE 1
+#define CONFIG_NET_CLS_ROUTE 1
+#define CONFIG_NET_CLS_FW_MODULE 1
+#define CONFIG_NET_CLS_U32_MODULE 1
+#undef CONFIG_CLS_U32_PERF
+#define CONFIG_NET_CLS_RSVP_MODULE 1
+#define CONFIG_NET_CLS_RSVP6_MODULE 1
+#undef CONFIG_NET_EMATCH
+#undef CONFIG_NET_CLS_ACT
+#define CONFIG_NET_CLS_POLICE 1
+#undef CONFIG_NET_CLS_IND
+#define CONFIG_NET_ESTIMATOR 1
+
+/*
+ * Network testing
+ */
+#undef CONFIG_NET_PKTGEN
+#undef CONFIG_HAMRADIO
+#undef CONFIG_IRDA
+#undef CONFIG_BT
+#undef CONFIG_IEEE80211
+
+/*
+ * Device Drivers
+ */
+
+/*
+ * Generic Driver Options
+ */
+#undef CONFIG_STANDALONE
+#undef CONFIG_PREVENT_FIRMWARE_BUILD
+#undef CONFIG_FW_LOADER
+#undef CONFIG_DEBUG_DRIVER
+
+/*
+ * Connector - unified userspace <-> kernelspace linker
+ */
+#undef CONFIG_CONNECTOR
+
+/*
+ * Memory Technology Devices (MTD)
+ */
+#define CONFIG_MTD 1
+#undef CONFIG_MTD_DEBUG
+#undef CONFIG_MTD_CONCAT
+#define CONFIG_MTD_PARTITIONS 1
+#undef CONFIG_MTD_REDBOOT_PARTS
+#undef CONFIG_MTD_CMDLINE_PARTS
+#undef CONFIG_MTD_AFS_PARTS
+
+/*
+ * User Modules And Translation Layers
+ */
+#define CONFIG_MTD_CHAR 1
+#undef CONFIG_MTD_BLOCK
+#undef CONFIG_MTD_BLOCK_RO
+#undef CONFIG_FTL
+#undef CONFIG_NFTL
+#undef CONFIG_INFTL
+#undef CONFIG_RFD_FTL
+
+/*
+ * RAM/ROM/Flash chip drivers
+ */
+#define CONFIG_MTD_CFI 1
+#undef CONFIG_MTD_JEDECPROBE
+#define CONFIG_MTD_GEN_PROBE 1
+#define CONFIG_MTD_CFI_ADV_OPTIONS 1
+#define CONFIG_MTD_CFI_NOSWAP 1
+#undef CONFIG_MTD_CFI_BE_BYTE_SWAP
+#undef CONFIG_MTD_CFI_LE_BYTE_SWAP
+#define CONFIG_MTD_CFI_GEOMETRY 1
+#undef CONFIG_MTD_MAP_BANK_WIDTH_1
+#define CONFIG_MTD_MAP_BANK_WIDTH_2 1
+#undef CONFIG_MTD_MAP_BANK_WIDTH_4
+#undef CONFIG_MTD_MAP_BANK_WIDTH_8
+#undef CONFIG_MTD_MAP_BANK_WIDTH_16
+#undef CONFIG_MTD_MAP_BANK_WIDTH_32
+#define CONFIG_MTD_CFI_I1 1
+#undef CONFIG_MTD_CFI_I2
+#undef CONFIG_MTD_CFI_I4
+#undef CONFIG_MTD_CFI_I8
+#undef CONFIG_MTD_OTP
+#undef CONFIG_MTD_CFI_INTELEXT
+#define CONFIG_MTD_CFI_AMDSTD 1
+#define CONFIG_MTD_CFI_AMDSTD_RETRY 0
+#undef CONFIG_MTD_CFI_STAA
+#define CONFIG_MTD_CFI_UTIL 1
+#undef CONFIG_MTD_RAM
+#undef CONFIG_MTD_ROM
+#undef CONFIG_MTD_SERIAL
+#undef CONFIG_MTD_ABSENT
+#undef CONFIG_MTD_XIP
+
+/*
+ * Mapping drivers for chip access
+ */
+#undef CONFIG_MTD_COMPLEX_MAPPINGS
+#undef CONFIG_MTD_PHYSMAP
+#undef CONFIG_MTD_ARM_INTEGRATOR
+#undef CONFIG_MTD_PLATRAM
+#define CONFIG_MTD_SL2312_CFI 1
+#undef CONFIG_MTD_SL2312_SERIAL_ATMEL
+#undef CONFIG_MTD_SL2312_SERIAL_ST
+#define CONFIG_SL2312_SHARE_PIN 1
+
+/*
+ * Self-contained MTD device drivers
+ */
+#undef CONFIG_MTD_SLRAM
+#undef CONFIG_MTD_PHRAM
+#undef CONFIG_MTD_MTDRAM
+#undef CONFIG_MTD_BLKMTD
+#undef CONFIG_MTD_BLOCK2MTD
+
+/*
+ * Disk-On-Chip Device Drivers
+ */
+#undef CONFIG_MTD_DOC2000
+#undef CONFIG_MTD_DOC2001
+#undef CONFIG_MTD_DOC2001PLUS
+
+/*
+ * NAND Flash Device Drivers
+ */
+#undef CONFIG_MTD_NAND
+
+/*
+ * OneNAND Flash Device Drivers
+ */
+#undef CONFIG_MTD_ONENAND
+
+/*
+ * Telephony Support
+ */
+#undef CONFIG_PHONE
+
+/*
+ * Parallel port support
+ */
+#undef CONFIG_PARPORT
+
+/*
+ * Plug and Play support
+ */
+
+/*
+ * Block devices
+ */
+#undef CONFIG_BLK_DEV_COW_COMMON
+#define CONFIG_BLK_DEV_LOOP 1
+#define CONFIG_BLK_DEV_CRYPTOLOOP 1
+#undef CONFIG_BLK_DEV_NBD
+#undef CONFIG_BLK_DEV_UB
+#define CONFIG_BLK_DEV_RAM 1
+#define CONFIG_BLK_DEV_RAM_COUNT 16
+#define CONFIG_BLK_DEV_RAM_SIZE 16
+#define CONFIG_BLK_DEV_INITRD 1
+#undef CONFIG_CDROM_PKTCDVD
+#undef CONFIG_ATA_OVER_ETH
+
+/*
+ * ATA/ATAPI/MFM/RLL support
+ */
+#define CONFIG_IDE 1
+#define CONFIG_BLK_DEV_IDE 1
+
+/*
+ * Please see Documentation/ide.txt for help/info on IDE drives
+ */
+#undef CONFIG_BLK_DEV_IDE_SATA
+#define CONFIG_BLK_DEV_IDEDISK 1
+#undef CONFIG_IDEDISK_MULTI_MODE
+#define CONFIG_BLK_DEV_IDECD 1
+#undef CONFIG_BLK_DEV_IDETAPE
+#undef CONFIG_BLK_DEV_IDEFLOPPY
+#undef CONFIG_BLK_DEV_IDESCSI
+#define CONFIG_IDE_TASK_IOCTL 1
+
+/*
+ * IDE chipset support/bugfixes
+ */
+#define CONFIG_IDE_GENERIC 1
+#define CONFIG_BLK_DEV_IDEDMA_PCI 1
+#undef CONFIG_BLK_DEV_IDEDMA_FORCED
+#undef CONFIG_IDEDMA_PCI_AUTO
+#undef CONFIG_BLK_DEV_AEC62XX
+#undef CONFIG_BLK_DEV_ALI15X3
+#undef CONFIG_BLK_DEV_AMD74XX
+#undef CONFIG_BLK_DEV_CMD64X
+#undef CONFIG_BLK_DEV_TRIFLEX
+#undef CONFIG_BLK_DEV_CY82C693
+#undef CONFIG_BLK_DEV_CS5520
+#undef CONFIG_BLK_DEV_CS5530
+#undef CONFIG_BLK_DEV_HPT34X
+#undef CONFIG_BLK_DEV_HPT366
+#undef CONFIG_BLK_DEV_SC1200
+#undef CONFIG_BLK_DEV_PIIX
+#undef CONFIG_BLK_DEV_IT821X
+#undef CONFIG_BLK_DEV_NS87415
+#undef CONFIG_BLK_DEV_PDC202XX_OLD
+#undef CONFIG_BLK_DEV_PDC202XX_NEW
+#undef CONFIG_BLK_DEV_SVWKS
+#undef CONFIG_BLK_DEV_SIIMAGE
+#undef CONFIG_BLK_DEV_SLC90E66
+#undef CONFIG_BLK_DEV_TRM290
+#undef CONFIG_BLK_DEV_VIA82CXXX
+#undef CONFIG_IDE_ARM
+#define CONFIG_BLK_DEV_IDE_SL2312 1
+#define CONFIG_BLK_DEV_SL2312_IDE_CHANNEL_0 1
+#undef CONFIG_BLK_DEV_SL2312_IDE_CHANNEL_1
+#define CONFIG_BLK_DEV_IDEDMA 1
+#undef CONFIG_IDEDMA_IVB
+#undef CONFIG_IDEDMA_AUTO
+#undef CONFIG_BLK_DEV_HD
+
+/*
+ * SCSI device support
+ */
+#define CONFIG_RAID_ATTRS 1
+#define CONFIG_SCSI 1
+#define CONFIG_SCSI_PROC_FS 1
+
+/*
+ * SCSI support type (disk, tape, CD-ROM)
+ */
+#define CONFIG_BLK_DEV_SD 1
+#undef CONFIG_CHR_DEV_ST
+#undef CONFIG_CHR_DEV_OSST
+#undef CONFIG_BLK_DEV_SR
+#define CONFIG_CHR_DEV_SG 1
+#undef CONFIG_CHR_DEV_SCH
+
+/*
+ * Some SCSI devices (e.g. CD jukebox) support multiple LUNs
+ */
+#undef CONFIG_SCSI_MULTI_LUN
+#undef CONFIG_SCSI_CONSTANTS
+#undef CONFIG_SCSI_LOGGING
+
+/*
+ * SCSI Transport Attributes
+ */
+#undef CONFIG_SCSI_SPI_ATTRS
+#undef CONFIG_SCSI_FC_ATTRS
+#undef CONFIG_SCSI_ISCSI_ATTRS
+#undef CONFIG_SCSI_SAS_ATTRS
+
+/*
+ * SCSI low-level drivers
+ */
+#undef CONFIG_ISCSI_TCP
+#undef CONFIG_SCSI_SATA
+#undef CONFIG_SCSI_DEBUG
+
+/*
+ * Multi-device support (RAID and LVM)
+ */
+#undef CONFIG_MD
+
+/*
+ * Fusion MPT device support
+ */
+#undef CONFIG_FUSION
+
+/*
+ * IEEE 1394 (FireWire) support
+ */
+
+/*
+ * I2O device support
+ */
+
+/*
+ * Network device support
+ */
+#define CONFIG_NETDEVICES 1
+#undef CONFIG_DUMMY
+#undef CONFIG_BONDING
+#undef CONFIG_EQUALIZER
+#undef CONFIG_TUN
+
+/*
+ * Ethernet (10 or 100Mbit)
+ */
+#undef CONFIG_NET_ETHERNET
+
+/*
+ * Ethernet (1000 Mbit)
+ */
+#undef CONFIG_NET_GMAC
+
+/*
+ * Ethernet (10000 Mbit)
+ */
+
+/*
+ * Token Ring devices
+ */
+
+/*
+ * Wireless LAN (non-hamradio)
+ */
+#undef CONFIG_NET_RADIO
+
+/*
+ * Wan interfaces
+ */
+#undef CONFIG_WAN
+#undef CONFIG_PPP
+#undef CONFIG_SLIP
+#undef CONFIG_SHAPER
+#undef CONFIG_NETCONSOLE
+
+/*
+ * ISDN subsystem
+ */
+#undef CONFIG_ISDN
+
+/*
+ * Input device support
+ */
+#define CONFIG_INPUT 1
+
+/*
+ * Userland interfaces
+ */
+#undef CONFIG_INPUT_MOUSEDEV
+#undef CONFIG_INPUT_JOYDEV
+#undef CONFIG_INPUT_TSDEV
+#undef CONFIG_INPUT_EVDEV
+#undef CONFIG_INPUT_EVBUG
+
+/*
+ * Input Device Drivers
+ */
+#undef CONFIG_INPUT_KEYBOARD
+#undef CONFIG_INPUT_MOUSE
+#undef CONFIG_INPUT_JOYSTICK
+#undef CONFIG_INPUT_TOUCHSCREEN
+#undef CONFIG_INPUT_MISC
+
+/*
+ * Hardware I/O ports
+ */
+#undef CONFIG_SERIO
+#undef CONFIG_GAMEPORT
+
+/*
+ * Character devices
+ */
+#undef CONFIG_VT
+#define CONFIG_SERIAL_NONSTANDARD 1
+#undef CONFIG_GEMINI_GPIO
+#undef CONFIG_GEMINI_CIR
+#undef CONFIG_GEMINI_PWC
+#undef CONFIG_GEMINI_I2S
+#undef CONFIG_COMPUTONE
+#undef CONFIG_ROCKETPORT
+#undef CONFIG_CYCLADES
+#undef CONFIG_DIGIEPCA
+#undef CONFIG_MOXA_INTELLIO
+#undef CONFIG_MOXA_SMARTIO
+#undef CONFIG_ISI
+#undef CONFIG_SYNCLINKMP
+#undef CONFIG_N_HDLC
+#undef CONFIG_RISCOM8
+#undef CONFIG_SPECIALIX
+#undef CONFIG_SX
+#undef CONFIG_RIO
+#undef CONFIG_STALDRV
+
+/*
+ * Serial drivers
+ */
+#undef CONFIG_SERIAL_8250
+
+/*
+ * Non-8250 serial port support
+ */
+#define CONFIG_SERIAL_SL2312 1
+#define CONFIG_SERIAL_SL2312_CONSOLE 1
+#define CONFIG_SERIAL_CORE 1
+#define CONFIG_SERIAL_CORE_CONSOLE 1
+#undef CONFIG_UNIX98_PTYS
+#undef CONFIG_LEGACY_PTYS
+
+/*
+ * IPMI
+ */
+#undef CONFIG_IPMI_HANDLER
+
+/*
+ * Watchdog Cards
+ */
+#define CONFIG_WATCHDOG 1
+#undef CONFIG_WATCHDOG_NOWAYOUT
+
+/*
+ * Watchdog Device Drivers
+ */
+#undef CONFIG_SOFT_WATCHDOG
+
+/*
+ * USB-based Watchdog Cards
+ */
+#undef CONFIG_USBPCWATCHDOG
+#define CONFIG_SL2312_WATCHDOG 1
+#undef CONFIG_NVRAM
+#undef CONFIG_RTC
+#define CONFIG_SL2312_RTC 1
+#undef CONFIG_SL2312_LCD
+#undef CONFIG_DTLK
+#undef CONFIG_R3964
+
+/*
+ * Ftape, the floppy tape device driver
+ */
+#undef CONFIG_RAW_DRIVER
+
+/*
+ * TPM devices
+ */
+#undef CONFIG_TCG_TPM
+#undef CONFIG_TELCLOCK
+
+/*
+ * I2C support
+ */
+#undef CONFIG_I2C
+
+/*
+ * Hardware Monitoring support
+ */
+#undef CONFIG_HWMON
+#undef CONFIG_HWMON_VID
+
+/*
+ * Misc devices
+ */
+
+/*
+ * Multimedia Capabilities Port drivers
+ */
+
+/*
+ * Multimedia devices
+ */
+#undef CONFIG_VIDEO_DEV
+
+/*
+ * Digital Video Broadcasting Devices
+ */
+#undef CONFIG_DVB
+
+/*
+ * Graphics support
+ */
+#undef CONFIG_FB
+
+/*
+ * Sound
+ */
+#undef CONFIG_SOUND
+
+/*
+ * USB support
+ */
+#define CONFIG_USB_ARCH_HAS_HCD 1
+#undef CONFIG_USB_ARCH_HAS_OHCI
+#define CONFIG_USB 1
+#undef CONFIG_USB_DEBUG
+
+/*
+ * Miscellaneous USB options
+ */
+#define CONFIG_USB_DEVICEFS 1
+#undef CONFIG_USB_BANDWIDTH
+#undef CONFIG_USB_DYNAMIC_MINORS
+#undef CONFIG_USB_OTG
+
+/*
+ * USB Host Controller Drivers
+ */
+#undef CONFIG_USB_ISP116X_HCD
+#undef CONFIG_USB_SL811_HCD
+#define CONFIG_USB_SL2312 1
+#define CONFIG_USB_SL2312_1 1
+
+/*
+ * USB Device Class drivers
+ */
+#undef CONFIG_USB_ACM
+#undef CONFIG_USB_PRINTER
+
+/*
+ * USB OTG Controller Drivers
+ */
+#define CONFIG_USB_OTG_SL2312 1
+#define CONFIG_USB_OTG_SL2312_1 1
+
+/*
+ * NOTE: USB_STORAGE enables SCSI, and 'SCSI disk support'
+ */
+
+/*
+ * may also be needed; see USB_STORAGE Help for more information
+ */
+#define CONFIG_USB_STORAGE 1
+#undef CONFIG_USB_STORAGE_DEBUG
+#undef CONFIG_USB_STORAGE_DATAFAB
+#undef CONFIG_USB_STORAGE_FREECOM
+#undef CONFIG_USB_STORAGE_ISD200
+#undef CONFIG_USB_STORAGE_DPCM
+#undef CONFIG_USB_STORAGE_USBAT
+#undef CONFIG_USB_STORAGE_SDDR09
+#undef CONFIG_USB_STORAGE_SDDR55
+#undef CONFIG_USB_STORAGE_JUMPSHOT
+
+/*
+ * USB Input Devices
+ */
+#undef CONFIG_USB_HID
+
+/*
+ * USB HID Boot Protocol drivers
+ */
+#undef CONFIG_USB_KBD
+#undef CONFIG_USB_MOUSE
+#undef CONFIG_USB_AIPTEK
+#undef CONFIG_USB_WACOM
+#undef CONFIG_USB_ACECAD
+#undef CONFIG_USB_KBTAB
+#undef CONFIG_USB_POWERMATE
+#undef CONFIG_USB_MTOUCH
+#undef CONFIG_USB_ITMTOUCH
+#undef CONFIG_USB_EGALAX
+#undef CONFIG_USB_YEALINK
+#undef CONFIG_USB_XPAD
+#undef CONFIG_USB_ATI_REMOTE
+#undef CONFIG_USB_KEYSPAN_REMOTE
+#undef CONFIG_USB_APPLETOUCH
+
+/*
+ * USB Imaging devices
+ */
+#undef CONFIG_USB_MDC800
+#undef CONFIG_USB_MICROTEK
+
+/*
+ * USB Multimedia devices
+ */
+#undef CONFIG_USB_DABUSB
+
+/*
+ * Video4Linux support is needed for USB Multimedia device support
+ */
+
+/*
+ * USB Network Adapters
+ */
+#undef CONFIG_USB_CATC
+#undef CONFIG_USB_KAWETH
+#undef CONFIG_USB_PEGASUS
+#undef CONFIG_USB_RTL8150
+#undef CONFIG_USB_USBNET
+#define CONFIG_USB_MON 1
+
+/*
+ * USB port drivers
+ */
+
+/*
+ * USB Serial Converter support
+ */
+#undef CONFIG_USB_SERIAL
+
+/*
+ * USB Miscellaneous drivers
+ */
+#undef CONFIG_USB_EMI62
+#undef CONFIG_USB_EMI26
+#undef CONFIG_USB_AUERSWALD
+#undef CONFIG_USB_RIO500
+#undef CONFIG_USB_LEGOTOWER
+#undef CONFIG_USB_LCD
+#undef CONFIG_USB_LED
+#undef CONFIG_USB_CYTHERM
+#undef CONFIG_USB_PHIDGETKIT
+#undef CONFIG_USB_PHIDGETSERVO
+#undef CONFIG_USB_IDMOUSE
+#undef CONFIG_USB_LD
+#undef CONFIG_USB_TEST
+
+/*
+ * USB DSL modem support
+ */
+
+/*
+ * USB Gadget Support
+ */
+#undef CONFIG_USB_GADGET
+
+/*
+ * MMC/SD Card support
+ */
+#undef CONFIG_MMC
+
+/*
+ * File systems
+ */
+#define CONFIG_EXT2_FS 1
+#undef CONFIG_EXT2_FS_XATTR
+#undef CONFIG_EXT2_FS_XIP
+#define CONFIG_EXT3_FS 1
+#undef CONFIG_EXT3_FS_XATTR
+#define CONFIG_JBD 1
+#undef CONFIG_JBD_DEBUG
+#undef CONFIG_REISERFS_FS
+#undef CONFIG_JFS_FS
+#undef CONFIG_FS_POSIX_ACL
+#undef CONFIG_XFS_FS
+#undef CONFIG_MINIX_FS
+#undef CONFIG_ROMFS_FS
+#undef CONFIG_INOTIFY
+#define CONFIG_QUOTA 1
+#undef CONFIG_QFMT_V1
+#define CONFIG_QFMT_V2 1
+#define CONFIG_QUOTACTL 1
+#define CONFIG_DNOTIFY 1
+#undef CONFIG_AUTOFS_FS
+#undef CONFIG_AUTOFS4_FS
+#undef CONFIG_FUSE_FS
+
+/*
+ * CD-ROM/DVD Filesystems
+ */
+#define CONFIG_ISO9660_FS 1
+#undef CONFIG_JOLIET
+#undef CONFIG_ZISOFS
+#undef CONFIG_UDF_FS
+
+/*
+ * DOS/FAT/NT Filesystems
+ */
+#define CONFIG_FAT_FS 1
+#define CONFIG_MSDOS_FS 1
+#define CONFIG_VFAT_FS 1
+#define CONFIG_FAT_DEFAULT_CODEPAGE 437
+#define CONFIG_FAT_DEFAULT_IOCHARSET "iso8859-1"
+#define CONFIG_NTFS_FS 1
+#undef CONFIG_NTFS_DEBUG
+#undef CONFIG_NTFS_RW
+
+/*
+ * Pseudo filesystems
+ */
+#define CONFIG_PROC_FS 1
+#define CONFIG_SYSFS 1
+#define CONFIG_TMPFS 1
+#undef CONFIG_HUGETLB_PAGE
+#define CONFIG_RAMFS 1
+#undef CONFIG_RELAYFS_FS
+
+/*
+ * Miscellaneous filesystems
+ */
+#undef CONFIG_ADFS_FS
+#undef CONFIG_AFFS_FS
+#undef CONFIG_HFS_FS
+#undef CONFIG_HFSPLUS_FS
+#undef CONFIG_BEFS_FS
+#undef CONFIG_BFS_FS
+#undef CONFIG_EFS_FS
+#undef CONFIG_JFFS_FS
+#undef CONFIG_JFFS2_FS
+#undef CONFIG_CRAMFS
+#undef CONFIG_VXFS_FS
+#undef CONFIG_HPFS_FS
+#undef CONFIG_QNX4FS_FS
+#undef CONFIG_SYSV_FS
+#undef CONFIG_UFS_FS
+
+/*
+ * Network File Systems
+ */
+#define CONFIG_NFS_FS 1
+#define CONFIG_NFS_V3 1
+#undef CONFIG_NFS_V3_ACL
+#undef CONFIG_NFS_V4
+#undef CONFIG_NFS_DIRECTIO
+#define CONFIG_NFSD 1
+#define CONFIG_NFSD_V3 1
+#undef CONFIG_NFSD_V3_ACL
+#undef CONFIG_NFSD_V4
+#undef CONFIG_NFSD_TCP
+#define CONFIG_LOCKD 1
+#define CONFIG_LOCKD_V4 1
+#define CONFIG_EXPORTFS 1
+#define CONFIG_NFS_COMMON 1
+#define CONFIG_SUNRPC 1
+#undef CONFIG_RPCSEC_GSS_KRB5
+#undef CONFIG_RPCSEC_GSS_SPKM3
+#define CONFIG_SMB_FS 1
+#undef CONFIG_SMB_NLS_DEFAULT
+#define CONFIG_CIFS 1
+#undef CONFIG_CIFS_STATS
+#undef CONFIG_CIFS_XATTR
+#undef CONFIG_CIFS_EXPERIMENTAL
+#undef CONFIG_NCP_FS
+#undef CONFIG_CODA_FS
+#undef CONFIG_AFS_FS
+#undef CONFIG_9P_FS
+
+/*
+ * Partition Types
+ */
+#undef CONFIG_PARTITION_ADVANCED
+#define CONFIG_MSDOS_PARTITION 1
+
+/*
+ * Native Language Support
+ */
+#define CONFIG_NLS 1
+#define CONFIG_NLS_DEFAULT "iso8859-1"
+#define CONFIG_NLS_CODEPAGE_437 1
+#undef CONFIG_NLS_CODEPAGE_737
+#undef CONFIG_NLS_CODEPAGE_775
+#undef CONFIG_NLS_CODEPAGE_850
+#undef CONFIG_NLS_CODEPAGE_852
+#undef CONFIG_NLS_CODEPAGE_855
+#undef CONFIG_NLS_CODEPAGE_857
+#undef CONFIG_NLS_CODEPAGE_860
+#undef CONFIG_NLS_CODEPAGE_861
+#undef CONFIG_NLS_CODEPAGE_862
+#undef CONFIG_NLS_CODEPAGE_863
+#undef CONFIG_NLS_CODEPAGE_864
+#undef CONFIG_NLS_CODEPAGE_865
+#undef CONFIG_NLS_CODEPAGE_866
+#undef CONFIG_NLS_CODEPAGE_869
+#undef CONFIG_NLS_CODEPAGE_936
+#define CONFIG_NLS_CODEPAGE_950 1
+#define CONFIG_NLS_CODEPAGE_932 1
+#undef CONFIG_NLS_CODEPAGE_949
+#undef CONFIG_NLS_CODEPAGE_874
+#undef CONFIG_NLS_ISO8859_8
+#undef CONFIG_NLS_CODEPAGE_1250
+#undef CONFIG_NLS_CODEPAGE_1251
+#undef CONFIG_NLS_ASCII
+#undef CONFIG_NLS_ISO8859_1
+#undef CONFIG_NLS_ISO8859_2
+#undef CONFIG_NLS_ISO8859_3
+#undef CONFIG_NLS_ISO8859_4
+#undef CONFIG_NLS_ISO8859_5
+#undef CONFIG_NLS_ISO8859_6
+#undef CONFIG_NLS_ISO8859_7
+#undef CONFIG_NLS_ISO8859_9
+#undef CONFIG_NLS_ISO8859_13
+#undef CONFIG_NLS_ISO8859_14
+#undef CONFIG_NLS_ISO8859_15
+#undef CONFIG_NLS_KOI8_R
+#undef CONFIG_NLS_KOI8_U
+#undef CONFIG_NLS_UTF8
+
+/*
+ * Profiling support
+ */
+#undef CONFIG_PROFILING
+
+/*
+ * Kernel hacking
+ */
+#undef CONFIG_PRINTK_TIME
+#define CONFIG_DEBUG_KERNEL 1
+#undef CONFIG_MAGIC_SYSRQ
+#define CONFIG_LOG_BUF_SHIFT 14
+#define CONFIG_DETECT_SOFTLOCKUP 1
+#undef CONFIG_SCHEDSTATS
+#undef CONFIG_DEBUG_SLAB
+#undef CONFIG_DEBUG_SPINLOCK
+#undef CONFIG_DEBUG_SPINLOCK_SLEEP
+#undef CONFIG_DEBUG_KOBJECT
+#undef CONFIG_DEBUG_BUGVERBOSE
+#define CONFIG_DEBUG_INFO 1
+#undef CONFIG_DEBUG_FS
+#undef CONFIG_DEBUG_VM
+#define CONFIG_FRAME_POINTER 1
+#undef CONFIG_RCU_TORTURE_TEST
+#undef CONFIG_DEBUG_USER
+#undef CONFIG_DEBUG_WAITQ
+#undef CONFIG_DEBUG_ERRORS
+#undef CONFIG_DEBUG_LL
+
+/*
+ * Security options
+ */
+#undef CONFIG_KEYS
+#undef CONFIG_SECURITY
+
+/*
+ * Cryptographic options
+ */
+#define CONFIG_CRYPTO 1
+#define CONFIG_CRYPTO_HMAC 1
+#undef CONFIG_CRYPTO_NULL
+#undef CONFIG_CRYPTO_MD4
+#define CONFIG_CRYPTO_MD5 1
+#define CONFIG_CRYPTO_SHA1 1
+#undef CONFIG_CRYPTO_SHA256
+#undef CONFIG_CRYPTO_SHA512
+#undef CONFIG_CRYPTO_WP512
+#undef CONFIG_CRYPTO_TGR192
+#define CONFIG_CRYPTO_DES 1
+#undef CONFIG_CRYPTO_BLOWFISH
+#undef CONFIG_CRYPTO_TWOFISH
+#undef CONFIG_CRYPTO_SERPENT
+#define CONFIG_CRYPTO_AES 1
+#undef CONFIG_CRYPTO_CAST5
+#undef CONFIG_CRYPTO_CAST6
+#undef CONFIG_CRYPTO_TEA
+#undef CONFIG_CRYPTO_ARC4
+#undef CONFIG_CRYPTO_KHAZAD
+#undef CONFIG_CRYPTO_ANUBIS
+#undef CONFIG_CRYPTO_DEFLATE
+#undef CONFIG_CRYPTO_MICHAEL_MIC
+#undef CONFIG_CRYPTO_CRC32C
+#undef CONFIG_CRYPTO_TEST
+
+/*
+ * Hardware crypto devices
+ */
+#define CONFIG_SL2312_IPSEC 1
+
+/*
+ * Library routines
+ */
+#undef CONFIG_CRC_CCITT
+#undef CONFIG_CRC16
+#undef CONFIG_CRC32
+#undef CONFIG_LIBCRC32C

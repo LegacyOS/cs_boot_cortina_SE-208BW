@@ -1,0 +1,1 @@
+board_config.h_1cpu16m

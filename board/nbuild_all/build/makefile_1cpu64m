@@ -1,0 +1,46 @@
+#************************************************************************
+# Makefile for Cortina-systems boot loader on LINUX environment
+#************************************************************************ 
+# chroot
+export PACKAGE_ROOT		:= /source/cs-boot
+#not chroot
+#export PACKAGE_ROOT		:= /home/middle/cs-boot
+#export RAM_128		:= 1
+export BOARD_FOLDER		:= $(PACKAGE_ROOT)/board/nbuild_all
+export PACKAGE_ENV		:= $(PACKAGE_ROOT)/env
+
+export BOARD_BIN_FOLDER	:= $(BOARD_FOLDER)/bin
+export TARGET_BIN_FILE 	:= $(BOARD_BIN_FOLDER)/lepus_linux_SL0AN_N64M.bin
+export TARGET_IMG_FILE  := $(BOARD_BIN_FOLDER)/lepus_linux_SL0AN_N64M.img
+#not chroot
+#export CROSS_COMPILE 	:= arm_v4t_le-
+#chroot
+export CROSS_COMPILE 	:= arm_920t_le-
+
+export CPU_FLAG		:= -mcpu=arm9
+export CPU_FLAG			:= -DCONFIG_ARM -D__ARM__ -mapcs-32 -march=armv4
+export MERGE_CMD		:= $(PACKAGE_ROOT)/tools/sl_merge/cs_merge
+export IMGHDR_CMD		:= $(PACKAGE_ROOT)/tools/sl_imghdr/cs_imghdr
+
+#Flash memory Map for boot program
+#
+BOOT_SIZE				:=  0x40000
+BOOT1_BIN_LOCATION		:=	0
+BOOT2_BIN_LOCATION		:=	0x1000
+#======================================================================
+include $(PACKAGE_ENV)/environment.mak
+CFLAGS 					:= $(BASIC_CFLAGS)
+LDFLAGS 				:= $(BASIC_LFLAGS)
+
+all: $(TARGET_IMG_FILE)
+#boot: $(TARGET_BIN_FILE)
+
+include $(PACKAGE_ENV)/build.mak
+
+$(TARGET_IMG_FILE): $(TARGET_BIN_FILE)
+	@mkdir -p $(dir $@)
+	$(IMGHDR_CMD) $< $@ 
+	@echo "... finish to build "$@""
+	
+
+	

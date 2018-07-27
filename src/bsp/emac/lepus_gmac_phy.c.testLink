@@ -1,0 +1,832 @@
+/****************************************************************************
+* Copyright  Storlink Corp 2005.  All rights reserved.                
+*--------------------------------------------------------------------------
+* Name			: emac_phy.c
+* Description	: 
+*		Handle Ethernet PHY and MII interface
+*
+* History
+*
+*	Date		Writer		Description
+*	-----------	-----------	-------------------------------------------------
+*	08/16/2005	Gary Chen	Create and implement from Amos Linux Code
+*
+****************************************************************************/
+#include <define.h>
+#include <board_config.h>
+#include <sl2312.h>
+
+#if defined(MIDWAY) && (defined(LEPUS_FPGA) || defined(LEPUS_ASIC))
+#include "sl_lepus_gmac.h"
+
+
+//extern unsigned int FLAG_SWITCH;
+
+unsigned int mii_read(unsigned char phyad,unsigned char regad);
+void mii_write(unsigned char phyad,unsigned char regad,unsigned int value);
+
+extern void gmac_write_reg(unsigned int base, unsigned int offset,unsigned int data,unsigned int bit_mask);
+extern void toe_gmac_disable_tx_rx(void);//(GMAC_INFO_T *tp);
+extern void toe_gmac_enable_tx_rx(void);//(GMAC_INFO_T *tp);
+void gmac_get_phy_status(GMAC_INFO_T *tp);
+extern unsigned int gmac_read_reg(unsigned int base, unsigned int offset);
+extern void gmac_write_reg(unsigned int base, unsigned int offset,unsigned int data,unsigned int bit_mask);
+
+extern gmac_num;
+int switch_pre_speed[5]={0,0,0,0,0};
+int switch_pre_link[5]={0,0,0,0,0};
+unsigned int switch_status;
+
+/***************************************/
+/* define GPIO module base address     */
+/***************************************/
+#define GPIO_BASE_ADDR  (IO_ADDRESS(SL2312_GPIO_BASE))
+
+/* define GPIO pin for MDC/MDIO */
+#if 0
+#ifdef LEPUS_ASIC
+#define H_MDC_PIN           22
+#define H_MDIO_PIN          21
+#define G_MDC_PIN           22
+#define G_MDIO_PIN          21
+#else
+#define H_MDC_PIN           3
+#define H_MDIO_PIN          2
+#define G_MDC_PIN           0
+#define G_MDIO_PIN          1
+#endif
+#else
+static unsigned int	H_MDC_PIN=0;
+static unsigned int	H_MDIO_PIN=0;
+static unsigned int	G_MDC_PIN=0;
+static unsigned int	G_MDIO_PIN=0;
+#endif
+//#define GPIO_MDC             0x80000000
+//#define GPIO_MDIO            0x00400000
+
+static unsigned int GPIO_MDC = 0;
+static unsigned int GPIO_MDIO = 0;
+static unsigned int GPIO_MDC_PIN = 0;
+static unsigned int GPIO_MDIO_PIN = 0;
+static unsigned int LAN_NUM=0; 
+
+// For PHY test definition!!
+#define LPC_EECK		0x02
+#define LPC_EDIO		0x04
+#define LPC_GPIO_SET		3
+#define LPC_BASE_ADDR		IO_ADDRESS(IT8712_IO_BASE)
+#define inb_gpio(x)		inb(LPC_BASE_ADDR + IT8712_GPIO_BASE + x)
+#define outb_gpio(x, y)		outb(y, LPC_BASE_ADDR + IT8712_GPIO_BASE + x)
+
+enum GPIO_REG
+{
+    GPIO_DATA_OUT   = 0x00,
+    GPIO_DATA_IN    = 0x04,
+    GPIO_PIN_DIR    = 0x08,
+    GPIO_BY_PASS    = 0x0c,
+    GPIO_DATA_SET   = 0x10,
+    GPIO_DATA_CLEAR = 0x14,
+};
+/***********************/
+/*    MDC : GPIO[31]   */
+/*    MDIO: GPIO[22]   */
+/***********************/
+
+void gmac_set_phy_status(GMAC_INFO_T *tp)
+{
+	
+	GMAC_STATUS_T   status;
+	unsigned int    reg_val, ability ,rcv_mask;
+	unsigned int    i = 0;
+	unsigned int data=0,tmp;
+
+data = REG32(SL2312_GLOBAL_BASE + 0x04);	
+tmp = REG32(SL2312_GLOBAL_BASE + 0x0);	
+if((data&BIT(30))&&((tmp&0xff)==0xc3))
+{
+		H_MDC_PIN=21;
+		H_MDIO_PIN=22;
+		G_MDC_PIN=21;
+		G_MDIO_PIN=22;
+		LAN_NUM=5;
+}
+else
+{
+		LAN_NUM=4;
+	#ifdef LEPUS_ASIC
+		H_MDC_PIN=22;
+		H_MDIO_PIN=21;
+		G_MDC_PIN=22;
+		G_MDIO_PIN=21;
+	#else
+		H_MDC_PIN=3;
+		H_MDIO_PIN=2;
+		G_MDC_PIN=0;
+		G_MDIO_PIN=1;
+	#endif
+}
+	
+	if(gmac_num)
+	{
+#if 0		
+		switch_status = LINK_DOWN;
+		rcv_mask = SPI_read(2,0,0x10);			// Receive mask
+		rcv_mask |= 0x4F;
+		for(i=0;i<LAN_NUM;i++){
+			reg_val = BIT(26)|(i<<21)|(10<<16);
+			SPI_write(3,0,1,reg_val);
+			hal_delay_us(10*1000);
+			reg_val = SPI_read(3,0,2);
+			if(reg_val & 0x0c00){
+				//printf("Port%d:Giga mode\n",i);
+				SPI_write(1,i,0x00,0x300701b1);	
+				SPI_write(1,i,0x00,0x10070181);	
+				switch_pre_link[i]=LINK_UP;
+				switch_pre_speed[i]=GMAC_SPEED_1000;
+			}
+			else{
+				reg_val = BIT(26)|(i<<21)|(5<<16);
+				SPI_write(3,0,1,reg_val);
+				hal_delay_us(10*1000);
+				ability = (reg_val = SPI_read(3,0,2)&0x5e0) >>5;
+				if ((ability & 0x0C)) /* 100M full duplex */
+				{
+					SPI_write(1,i,0x00,0x30050472);	
+					SPI_write(1,i,0x00,0x10050442);	
+					//printf("Port%d:100M\n",i);
+					switch_pre_link[i]=LINK_UP;
+				switch_pre_speed[i]=GMAC_SPEED_100;
+				}
+				else if((ability & 0x03)) /* 10M full duplex */
+				{
+					SPI_write(1,i,0x00,0x30050473);	
+					SPI_write(1,i,0x00,0x10050443);	
+					//printf("Port%d:10M\n",i);
+					switch_pre_link[i]=LINK_UP;
+					switch_pre_speed[i]=GMAC_SPEED_10;
+				}
+				else{
+					SPI_write(1,i,0x00,0x20000030);			// PORT_RST
+					switch_pre_link[i]=LINK_DOWN;
+					switch_pre_speed[i]=GMAC_SPEED_10;
+					rcv_mask &= ~BIT(i);
+					SPI_write(2,0,0x10,rcv_mask);			// Disable Receive
+				}
+			}
+		}
+		SPI_write(2,0,0x10,rcv_mask);			// Enable Receive
+#endif
+		gmac_get_phy_status(tp);		
+		gmac_write_reg(tp->base_addr, GMAC_STATUS, 0x7d, 0x0000007f);
+		
+	}
+	else
+	{
+	
+	   // if (FLAG_SWITCH==1)
+	   // {
+	   //     return; /* GMAC connects to a switch chip, not PHY */
+	   // }
+	    reg_val=(mii_read(tp->phy_addr,0x02) << 16) + mii_read(tp->phy_addr,0x03);
+	    printf("PHY %d Addr %d Vendor ID: 0x%08x\n", tp->phy_id, tp->phy_addr, reg_val);
+	
+	#if defined(GEMINI_ASIC) || defined(LEPUS_ASIC)
+		mii_write(tp->phy_addr,0x04,0x05e1); 
+		mii_write(tp->phy_addr,0x09,0x0300);
+	#else
+	   	mii_write(tp->phy_addr,0x04,0x05e1); /* advertisement 100M full duplex, pause capable on */
+	   	mii_write(tp->phy_addr,0x09,0x0000); /* advertisement no 1000M */
+	#endif    
+	    mii_write(tp->phy_addr,0x00,0x1200);
+	
+		reg_val = 0x1200 | (1 << 15);
+		mii_write(tp->phy_addr,0x00,reg_val); /* Enable and Restart Auto-Negotiation */
+		reg_val &= ~(1 << 15);
+		mii_write(tp->phy_addr, 0x00, reg_val);
+		hal_delay_us(100000);
+	}
+	gmac_get_phy_status(tp);
+}
+
+void gmac_get_phy_status(GMAC_INFO_T *tp)
+{
+	GMAC_CONFIG0_T	config0,config0_mask;
+    GMAC_STATUS_T   status, old_status;
+    unsigned int    reg_val,ability;
+    unsigned int    dev_index,rcv_mask,mac_config,speed_fdx_mode,link_mode=0;
+	int i;
+	unsigned int data=0,tmp;
+
+data = REG32(SL2312_GLOBAL_BASE + 0x04);
+tmp = REG32(SL2312_GLOBAL_BASE + 0x0);	
+if((data&BIT(30))&&((tmp&0xff)==0xc3))	
+{
+		H_MDC_PIN=21;
+		H_MDIO_PIN=22;
+		G_MDC_PIN=21;
+		G_MDIO_PIN=22;
+}
+else
+{
+	#ifdef LEPUS_ASIC
+		H_MDC_PIN=22;
+		H_MDIO_PIN=21;
+		G_MDC_PIN=22;
+		G_MDIO_PIN=21;
+	#else
+		H_MDC_PIN=3;
+		H_MDIO_PIN=2;
+		G_MDC_PIN=0;
+		G_MDIO_PIN=1;
+	#endif
+}
+	
+	if(gmac_num)
+	{		
+		rcv_mask = SPI_read(2,0,0x10);			// Receive mask
+		
+		old_status.bits32 = status.bits32 = gmac_read_reg(tp->base_addr, GMAC_STATUS);
+
+		for(i=0;i<LAN_NUM;i++){
+			//if(((phy_read(i, 1) & 0x0004) != 0))
+			//{
+			//		printf("Port %x link up\n",i);
+			//		
+			//		/* Get info about speed and duplex mode from PHY reg. 28 */ 
+    		//		reg_val = phy_read(i, 28);
+   		//			
+    		//		/* set speed field (bit 1:0) = bit 4:3 of PHY reg. */
+    		//		speed_fdx_mode = ((unsigned char) reg_val >> 3) & 0x03;
+   		//		
+    		//		/* update full duplex bit */
+    		//		if (reg_val & 0x20) {
+    		//		    speed_fdx_mode |= 0x10;
+    		//		}
+    		//		
+    		//		
+    		//		/* check if link partner supports pause frames */
+    		//		if (phy_read(i, 5) & 0x0400) {
+    		//		    link_mode |= 0x20;
+    		//		}
+    		//		printf("reg_val %x speed_fdx_mode %x link_mode %x\n",reg_val,speed_fdx_mode,link_mode);
+    		//}
+    		
+			reg_val = BIT(26)|(i<<21)|(1<<16);
+			SPI_write(3,0,1,reg_val);
+			hal_delay_us(5*1000);
+			reg_val = SPI_read(3,0,2);
+			if ((reg_val & 0x0024) == 0x0024) /* link is established and auto_negotiate process completed */
+			{
+				if(switch_pre_link[i]==LINK_DOWN){		// Link Down ==> Link up
+								
+				rcv_mask |= BIT(i);			// Enable receive
+				
+				//reg_val = phy_read(i,28) ;
+				reg_val = BIT(26)|(i<<21)|(10<<16);
+				SPI_write(3,0,1,reg_val);
+				hal_delay_us(5*1000);
+				reg_val = SPI_read(3,0,2);
+				if(reg_val & 0x0c00){
+#if 0					
+					printk("Port%d:Giga mode\n",i);
+					phy_optimize_receiver_reconfig(i);
+					SPI_write(1,i,0x00,0x300701B1);
+					SPI_write(1,i,0x00,0x10070181);
+					switch_pre_link[i]=LINK_UP;
+					switch_pre_speed[i]=GMAC_SPEED_1000;
+#else
+					//printk("Port%d:Giga mode\n",i);
+					//mac_config = 0x00060004;
+					mac_config = 0x00060184;
+					
+					SPI_write(1,i,0x00,((mac_config & 0xfffffff8) | 1) | 0x20000030);	// reset port
+					mac_config |= (( BIT(i) << 19) | 0x08000000);
+					SPI_write(1,i,0x00,mac_config);
+					SPI_write(1,i,0x04,0x000300ff);		// flow control
+					
+					reg_val = SPI_read(5,0,0x12);
+					reg_val &= ~BIT(i);
+					SPI_write(5,0,0x12,reg_val);
+					
+					reg_val = SPI_read(1,i,0x00);
+					reg_val |= 0x18010000;
+					SPI_write(1,i,0x00,reg_val);
+					
+					//phy_receiver_reconfig(i);
+					switch_pre_link[i]=LINK_UP;
+					switch_pre_speed[i]=GMAC_SPEED_1000;					
+#endif					
+				}
+				else{
+					reg_val = BIT(26)|(i<<21)|(5<<16);
+					SPI_write(3,0,1,reg_val);
+					hal_delay_us(5 * 1000);
+					ability = (reg_val = SPI_read(3,0,2)&0x5e0) >>5;
+					if ((ability & 0x0C)) /* 100M full duplex */
+					{
+#if 0						
+						SPI_write(1,i,0x00,0x30050472);
+						SPI_write(1,i,0x00,0x10050442);
+						printk("Port%d:100M\n",i);
+						switch_pre_link[i]=LINK_UP;
+						switch_pre_speed[i]=GMAC_SPEED_100;
+#else
+						//mac_config = 0x00040004;
+						mac_config = 0x00040444;
+					
+						SPI_write(1,i,0x00,((mac_config & 0xfffffff8) | 1) | 0x20000030);	// reset port
+						mac_config |= (( BIT(i) << 19) | 0x08000000);
+						SPI_write(1,i,0x00,mac_config);
+						SPI_write(1,i,0x04,0x000300ff);		// flow control
+					
+						reg_val = SPI_read(5,0,0x12);
+						reg_val &= ~BIT(i);
+						SPI_write(5,0,0x12,reg_val);
+					
+						reg_val = SPI_read(1,i,0x00);
+						reg_val |= 0x18010000;
+						SPI_write(1,i,0x00,reg_val);
+						//printk("Port%d:100M\n",i);
+						switch_pre_link[i]=LINK_UP;
+						switch_pre_speed[i]=GMAC_SPEED_100;
+#endif						
+					}
+					else if((ability & 0x03)) /* 10M full duplex */
+					{
+#if 0						
+						SPI_write(1,i,0x00,0x30050473);
+						SPI_write(1,i,0x00,0x10050443);
+						printk("Port%d:10M\n",i);
+						switch_pre_link[i]=LINK_UP;
+						switch_pre_speed[i]=GMAC_SPEED_10;
+#else
+						mac_config = 0x00040004;
+					
+						SPI_write(1,i,0x00,((mac_config & 0xfffffff8) | 1) | 0x20000030);	// reset port
+						mac_config |= (( BIT(i) << 19) | 0x08000000);
+						SPI_write(1,i,0x00,mac_config);
+						SPI_write(1,i,0x04,0x000300ff);		// flow control
+					
+						reg_val = SPI_read(5,0,0x12);
+						reg_val &= ~BIT(i);
+						SPI_write(5,0,0x12,reg_val);
+					
+						reg_val = SPI_read(1,i,0x00);
+						reg_val |= 0x18010000;
+						SPI_write(1,i,0x00,reg_val);
+						//printk("Port%d:10M\n",i);
+						switch_pre_link[i]=LINK_UP;
+						switch_pre_speed[i]=GMAC_SPEED_10;
+#endif						
+					}
+					else{
+						SPI_write(1,i,0x00,0x20000030);
+						//printk("Port%d:Unknown mode\n",i);
+						switch_pre_link[i]=LINK_DOWN;
+						switch_pre_speed[i]=GMAC_SPEED_10;
+						}
+					}
+					arp_flush_cache();
+#if 0					
+					reg_val = SPI_read(2,0,0x80+i);
+					reg_val &= ~BIT(i);
+					SPI_write(2,0,0x80+i,reg_val);
+#endif					
+				}
+				else{						// Link up ==> Link UP		
+					tp->pre_phy_status = LINK_UP;
+			
+				}
+					if((tp->pre_phy_status == LINK_UP)&&(switch_status == LINK_DOWN))
+					{
+						//printf(" toe_gmac_enable_tx_rx 1: \n");
+						toe_gmac_enable_tx_rx();
+						switch_status = LINK_UP;
+					}
+			}
+			else{							// Link up ==> Link Down
+				if(switch_pre_link[i]==LINK_UP){
+#if 0					
+					printk("Port%d:Link Down\n",i);
+					phy_optimize_receiver_init(i);
+					reg_val = SPI_read(1,i,0x00);			
+					reg_val &= ~BIT(16);
+					SPI_write(1,i,0x00,reg_val);			// disable RX
+					SPI_write(5,0,0x0E,BIT(i));			// dicard packet
+					while((SPI_read(5,0,0x0C)&BIT(i))==0)			// wait to be empty
+						hal_delay_us(1*1000);
+					
+					SPI_write(1,i,0x00,0x20000030);			// PORT_RST
+#else   	
+					//printk("Port%d:Link Down\n",i);
+					phy_receiver_init(i);
+					reg_val = SPI_read(1,i,0);
+					reg_val &= ~BIT(16);
+					SPI_write(1,i,0x00,reg_val);			// disable RX
+					SPI_write(5,0,0x0E,BIT(i));			// dicard packet
+					while((SPI_read(5,0,0x0C)&BIT(i))==0)		// wait to be empty
+						hal_delay_us(1*1000);
+					SPI_write(1,i,0x00,0x20000030);			// PORT_RST
+					
+					SPI_write(5,0,0x0E,SPI_read(5,0,0x0E)&~BIT(i));			// dicard packet
+					reg_val = SPI_read(5,0,0x12);
+					reg_val |= BIT(i);
+					SPI_write(5,0,0x12,reg_val);
+#endif					
+				}
+#if 0				
+				switch_pre_link[i]=LINK_DOWN;
+				rcv_mask &= ~BIT(i);			// disable receive
+				SPI_write(5,0,0x12,BIT(i));	
+#else   	
+				switch_pre_link[i]=LINK_DOWN;
+				rcv_mask &= ~BIT(i);			// disable receive
+#endif				
+			}
+		}
+	
+		if((switch_pre_link[0]==LINK_DOWN)&&(switch_pre_link[1]==LINK_DOWN)&&(switch_pre_link[2]==LINK_DOWN)&&(switch_pre_link[3]==LINK_DOWN))
+			tp->pre_phy_status = LINK_DOWN;
+    	
+    	
+			
+		SPI_write(2,0,0x10,rcv_mask);			// Receive mask
+		
+		
+		if((tp->pre_phy_status == LINK_UP)&&(switch_status == LINK_DOWN))
+		{
+			//printf(" toe_gmac_enable_tx_rx: \n");
+			toe_gmac_enable_tx_rx();
+			switch_status = LINK_UP;
+		}
+		else if((tp->pre_phy_status == LINK_DOWN)&&(switch_status == LINK_UP)){
+			//printf("toe_gmac_disable_tx_rx\n");
+			toe_gmac_disable_tx_rx();
+			//arp_flush_cache();
+			switch_status = LINK_DOWN;
+		}
+		
+	}
+	else //if(!gmac_num)
+	{
+		
+
+		status.bits32 = old_status.bits32 = gmac_read_reg(tp->base_addr, GMAC_STATUS);
+    	
+    	/* read PHY status register */
+    	reg_val = mii_read(tp->phy_addr,0x01);
+    	if ((reg_val & 0x0024) == 0x0024) /* link is established and auto_negotiate process completed */
+    	{
+    	    /* read PHY Auto-Negotiation Link Partner Ability Register */
+    	    reg_val = mii_read(tp->phy_addr,10);
+    	    if ((reg_val & 0x0800) == 0x0800)
+    	    {
+    	    	if(status.bits.mii_rmii == 2)
+    	    		status.bits.mii_rmii = 3;
+    	        status.bits.duplex = 1;
+    	        status.bits.speed = 2;
+    	    }
+    	    else if ((reg_val & 0x0400) == 0x0400)
+    	    { 
+    	    	if(status.bits.mii_rmii == 2)
+    	    		status.bits.mii_rmii = 3;
+    	        status.bits.duplex = 0;
+    	        status.bits.speed = 2;
+    	    }
+    	    else
+    	    {  
+    	    	reg_val = (mii_read(tp->phy_addr,0x05) & 0x05E0) >> 5;
+    	    	if(status.bits.mii_rmii == 3)
+    	    		status.bits.mii_rmii = 2;
+    	    	if ((reg_val & 0x08)==0x08) /* 100M full duplex */
+    	    	{
+    	    	        status.bits.duplex = 1;
+    	    	        status.bits.speed = 1;
+    	    	}
+    	    	else if ((reg_val & 0x04)==0x04) /* 100M half duplex */
+    	    	{
+    	    	        status.bits.duplex = 0;
+    	    	        status.bits.speed = 1;
+    	    	}
+    	    	else if ((reg_val & 0x02)==0x02) /* 10M full duplex */
+    	    	{
+    	    	        status.bits.duplex = 1;
+    	    	        status.bits.speed = 0;
+    	    	}
+    	    	else if ((reg_val & 0x01)==0x01) /* 10M half duplex */
+    	    	{
+    	    	        status.bits.duplex = 0;
+    	    	        status.bits.speed = 0;
+    	    	}
+    	    }
+    	    status.bits.link = LINK_UP; /* link up */
+    	
+    	    if ((reg_val & 0x20)==0x20)
+    	    {
+    	        if (tp->flow_control_enable == 0)
+    	        {
+    	            config0.bits32 = 0;
+    	            config0_mask.bits32 = 0;
+    	            config0.bits.tx_fc_en = 1; /* enable tx flow control */
+    	            config0.bits.rx_fc_en = 1; /* enable rx flow control */
+    	            config0_mask.bits.tx_fc_en = 1;
+    	            config0_mask.bits.rx_fc_en = 1;
+    	            gmac_write_reg(tp->base_addr, GMAC_CONFIG0,config0.bits32,config0_mask.bits32);
+    	           // printf("Flow Control Enable. \n");
+    	        }
+    	        tp->flow_control_enable = 1;
+    	    }
+    	    else
+    	    {
+    	        if (tp->flow_control_enable == 1)
+    	        {
+    	            config0.bits32 = 0;
+    	            config0_mask.bits32 = 0;
+    	            config0.bits.tx_fc_en = 0; /* disable tx flow control */
+    	            config0.bits.rx_fc_en = 0; /* disable rx flow control */
+    	            config0_mask.bits.tx_fc_en = 1;
+    	            config0_mask.bits.rx_fc_en = 1;
+    	            gmac_write_reg(tp->base_addr, GMAC_CONFIG0,config0.bits32,config0_mask.bits32);
+    	          //  printf("Flow Control Disable. \n");
+    	        }
+    	        tp->flow_control_enable = 0;
+    	    }
+    	
+    	    if (tp->pre_phy_status == LINK_DOWN)
+    	    {
+    	        toe_gmac_enable_tx_rx();
+    	        tp->pre_phy_status = LINK_UP;
+    	        // netif_wake_queue(dev);
+				// set_bit(__LINK_STATE_START, &dev->state);
+		 
+		 		// Modify Andrew on 2011-3-29 to collect RTL8211E Phy information
+				reg_val=(mii_read(tp->phy_addr,0x02) << 16) + mii_read(tp->phy_addr,0x03);
+  	    	    printf("Phy addr and Vendor ID: 0x%08x\n",reg_val);
+	
+    	 		reg_val = mii_read(tp->phy_addr,0);
+		 		printf("BMCR Reg: %x\t",reg_val ); 
+    	 
+		 		reg_val = mii_read(tp->phy_addr,1);
+		 		printf("BMSR Reg: %x\t",reg_val ); 
+
+	     		reg_val = mii_read(tp->phy_addr,4);
+		 		printf("ANAR Reg: %x\n",reg_val ); 
+    	    }
+    	}
+    	else
+    	{
+    	    status.bits.link = LINK_DOWN; /* link down */
+    	    if (tp->pre_phy_status == LINK_UP)
+    	    {
+    	        toe_gmac_disable_tx_rx();
+    	        tp->pre_phy_status = LINK_DOWN;
+    	        // netif_stop_queue(dev);
+				// clear_bit(__LINK_STATE_START, &dev->state);
+    	    }
+    	}
+    	tp->full_duplex_status = status.bits.duplex;
+		tp->speed_status = status.bits.speed;
+		if (!tp->auto_nego_cfg)
+		{
+			status.bits.duplex = tp->full_duplex_cfg;
+			status.bits.speed = tp->speed_cfg;
+		}
+    	
+		if (status.bits32 != old_status.bits32) 
+    		gmac_write_reg(tp->base_addr, GMAC_STATUS, status.bits32, 0x0000007f);
+    }
+}
+
+
+/***************************************************
+* All the commands should have the frame structure:
+*<PRE><ST><OP><PHYAD><REGAD><TA><DATA><IDLE>
+****************************************************/
+
+/*****************************************************************
+* Inject a bit to NWay register through CSR9_MDC,MDIO
+*******************************************************************/
+void mii_serial_write(char bit_MDO) // write data into mii PHY
+{
+#ifdef CONFIG_SL2312_LPC_IT8712
+	unsigned char iomode,status;
+
+	iomode = LPCGetConfig(LDN_GPIO, 0xc8 + LPC_GPIO_SET);
+	iomode |= (LPC_EECK|LPC_EDIO) ;				// Set EECK,EDIO,EECS output
+	LPCSetConfig(LDN_GPIO, 0xc8 + LPC_GPIO_SET, iomode);
+
+	if(bit_MDO)
+	{
+		status = inb_gpio( LPC_GPIO_SET);
+		status |= LPC_EDIO ;		//EDIO high
+		outb_gpio(LPC_GPIO_SET, status);
+	}
+	else
+	{
+		status = inb_gpio( LPC_GPIO_SET);
+		status &= ~(LPC_EDIO) ;		//EDIO low
+		outb_gpio(LPC_GPIO_SET, status);
+	}
+
+	status |= LPC_EECK ;		//EECK high
+	outb_gpio(LPC_GPIO_SET, status);
+
+	status &= ~(LPC_EECK) ;		//EECK low
+	outb_gpio(LPC_GPIO_SET, status);
+
+#else
+    unsigned int addr;
+    unsigned int value;
+
+    addr = GPIO_BASE_ADDR + GPIO_PIN_DIR;
+    value = readl(addr) | GPIO_MDC | GPIO_MDIO; /* set MDC/MDIO Pin to output */
+    writel(value,addr);
+    if(bit_MDO)
+    {
+        addr = (GPIO_BASE_ADDR + GPIO_DATA_SET);
+        writel(GPIO_MDIO,addr); /* set MDIO to 1 */
+        addr = (GPIO_BASE_ADDR + GPIO_DATA_SET);
+        writel(GPIO_MDC,addr); /* set MDC to 1 */
+        addr = (GPIO_BASE_ADDR + GPIO_DATA_CLEAR);
+        writel(GPIO_MDC,addr); /* set MDC to 0 */
+    }
+    else
+    {
+        addr = (GPIO_BASE_ADDR + GPIO_DATA_CLEAR);
+        writel(GPIO_MDIO,addr); /* set MDIO to 0 */
+        addr = (GPIO_BASE_ADDR + GPIO_DATA_SET);
+        writel(GPIO_MDC,addr); /* set MDC to 1 */
+        addr = (GPIO_BASE_ADDR + GPIO_DATA_CLEAR);
+        writel(GPIO_MDC,addr); /* set MDC to 0 */
+    }
+
+#endif
+}
+
+/**********************************************************************
+* read a bit from NWay register through CSR9_MDC,MDIO
+***********************************************************************/
+unsigned int mii_serial_read(void) // read data from mii PHY
+{
+#ifdef CONFIG_SL2312_LPC_IT8712
+  	unsigned char iomode,status;
+	unsigned int value ;
+
+	iomode = LPCGetConfig(LDN_GPIO, 0xc8 + LPC_GPIO_SET);
+	iomode &= ~(LPC_EDIO) ;		// Set EDIO input
+	iomode |= (LPC_EECK) ;		// Set EECK,EECS output
+	LPCSetConfig(LDN_GPIO, 0xc8 + LPC_GPIO_SET, iomode);
+
+	status = inb_gpio( LPC_GPIO_SET);
+	status |= LPC_EECK ;		//EECK high
+	outb_gpio(LPC_GPIO_SET, status);
+
+	status &= ~(LPC_EECK) ;		//EECK low
+	outb_gpio(LPC_GPIO_SET, status);
+
+	value = inb_gpio( LPC_GPIO_SET);
+
+	value = value>>2 ;
+	value &= 0x01;
+
+	return value ;
+
+#else
+    unsigned int *addr;
+    unsigned int value;
+
+    addr = (unsigned int *)(GPIO_BASE_ADDR + GPIO_PIN_DIR);
+    value = readl(addr) & ~GPIO_MDIO; //0xffbfffff;   /* set MDC to output and MDIO to input */
+    writel(value,addr);
+
+    addr = (unsigned int *)(GPIO_BASE_ADDR + GPIO_DATA_SET);
+    writel(GPIO_MDC,addr); /* set MDC to 1 */
+    addr = (unsigned int *)(GPIO_BASE_ADDR + GPIO_DATA_CLEAR);
+    writel(GPIO_MDC,addr); /* set MDC to 0 */
+
+    addr = (unsigned int *)(GPIO_BASE_ADDR + GPIO_DATA_IN);
+    value = readl(addr);
+    value = (value & (1<<GPIO_MDIO_PIN)) >> GPIO_MDIO_PIN;
+    return(value);
+
+#endif
+}
+
+/***************************************
+* preamble + ST
+***************************************/
+void mii_pre_st(void)
+{
+    unsigned char i;
+
+    for(i=0;i<32;i++) // PREAMBLE
+        mii_serial_write(1);
+    mii_serial_write(0); // ST
+    mii_serial_write(1);
+}
+
+
+/******************************************
+* Read MII register
+* phyad -> physical address
+* regad -> register address
+***************************************** */
+unsigned int mii_read(unsigned char phyad,unsigned char regad)
+{
+    unsigned int i,value;
+    unsigned int bit;
+
+    if (phyad == GPHY_ADDR)
+    {
+        GPIO_MDC_PIN = G_MDC_PIN;   /* assigned MDC pin for giga PHY */
+        GPIO_MDIO_PIN = G_MDIO_PIN; /* assigned MDIO pin for giga PHY */
+    }
+    else
+    {    
+        GPIO_MDC_PIN = H_MDC_PIN;   /* assigned MDC pin for 10/100 PHY */
+        GPIO_MDIO_PIN = H_MDIO_PIN; /* assigned MDIO pin for 10/100 PHY */
+    }
+    GPIO_MDC = (1<<GPIO_MDC_PIN);   
+    GPIO_MDIO = (1<<GPIO_MDIO_PIN); 
+
+    mii_pre_st(); // PRE+ST
+    mii_serial_write(1); // OP
+    mii_serial_write(0);
+
+    for (i=0;i<5;i++) { // PHYAD
+        bit= ((phyad>>(4-i)) & 0x01) ? 1 :0 ;
+        mii_serial_write(bit);
+    }
+
+    for (i=0;i<5;i++) { // REGAD
+        bit= ((regad>>(4-i)) & 0x01) ? 1 :0 ;
+        mii_serial_write(bit);
+    }
+
+    mii_serial_read(); // TA_Z
+//    if((bit=mii_serial_read()) !=0 ) // TA_0
+//    {
+//        return(0);
+//    }
+    value=0;
+    for (i=0;i<16;i++) { // READ DATA
+        bit=mii_serial_read();
+        value += (bit<<(15-i)) ;
+    }
+
+    mii_serial_write(0); // dumy clock
+    mii_serial_write(0); // dumy clock
+	
+	//printf("%s: phy_addr=0x%x reg_addr=0x%x value=0x%x \n",__func__,phyad,regad,value);
+    return(value);
+}
+
+/******************************************
+* Write MII register
+* phyad -> physical address
+* regad -> register address
+* value -> value to be write
+***************************************** */
+void mii_write(unsigned char phyad,unsigned char regad,unsigned int value)
+{
+    unsigned int i;
+    char bit;
+
+	printf("%s: phy_addr=0x%x reg_addr=0x%x value=0x%x \n",__func__,phyad,regad,value);
+    if (phyad == GPHY_ADDR)
+    {
+        GPIO_MDC_PIN = G_MDC_PIN;   /* assigned MDC pin for giga PHY */
+        GPIO_MDIO_PIN = G_MDIO_PIN; /* assigned MDIO pin for giga PHY */
+    }
+    else
+    {    
+        GPIO_MDC_PIN = H_MDC_PIN;   /* assigned MDC pin for 10/100 PHY */
+        GPIO_MDIO_PIN = H_MDIO_PIN; /* assigned MDIO pin for 10/100 PHY */
+    }
+    GPIO_MDC = (1<<GPIO_MDC_PIN);   
+    GPIO_MDIO = (1<<GPIO_MDIO_PIN); 
+
+    mii_pre_st(); // PRE+ST
+    mii_serial_write(0); // OP
+    mii_serial_write(1);
+    for (i=0;i<5;i++) { // PHYAD
+        bit= ((phyad>>(4-i)) & 0x01) ? 1 :0 ;
+        mii_serial_write(bit);
+    }
+
+    for (i=0;i<5;i++) { // REGAD
+        bit= ((regad>>(4-i)) & 0x01) ? 1 :0 ;
+        mii_serial_write(bit);
+    }
+    mii_serial_write(1); // TA_1
+    mii_serial_write(0); // TA_0
+
+    for (i=0;i<16;i++) { // OUT DATA
+        bit= ((value>>(15-i)) & 0x01) ? 1 : 0 ;
+        mii_serial_write(bit);
+    }
+    mii_serial_write(0); // dumy clock
+    mii_serial_write(0); // dumy clock
+}
+
+#endif // #ifdef MIDWAY

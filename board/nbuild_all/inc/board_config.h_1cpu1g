@@ -1,0 +1,124 @@
+/****************************************************************************
+ * Copyright  Cortina-systems 2005.  All rights reserved.                
+ *--------------------------------------------------------------------------
+ * Name			: board_config.h
+ * Description	: 
+ *		Define board-dependent configuration, including
+ *		software configuration:
+ *			(1) default MAC address,....
+ *		hardware setting,
+ *			(1) Clock rate
+ *			(2) DRAM size and memory map
+ *			(3) Flash Size and memory map
+ *
+ * History
+ *
+ *	Date		Writer		Description
+ *	-----------	-----------	-------------------------------------------------
+ *	04/18/2005	Gary Chen	Create
+ *
+ ****************************************************************************/
+#ifndef _BOARD_CONFIG_H
+#define _BOARD_CONFIG_H
+
+#include <board_com.h>
+
+#define BOARD_DRAM_SIZE					64 * 1024 * 1024 //128M
+#define BOARD_BOOT2_MALLOC_SIZE			(20 * 1024 * 1024)
+
+
+//boot from flash
+#define BOARD_SUPPORT_FIS				1
+
+#define BOARD_NAND_BOOT				1
+	#ifdef BOARD_NAND_BOOT
+	//	#define	BOARD_SUPPORT_YAFFS2	1
+	#define	BOARD_SUPPORT_SOFTECC 1
+	#define	BOARD_SUPPORT_NAND_INDIRECT 1
+	#endif 
+	
+// Note: To support the IDE, the BOARD_SUPPORT_IDE0 && BOARD_SUPPORT_IDE1 must be defined
+//       with value 0 or 1, otherwise only support IDE1 for backward compatiable isuue
+
+#define USB_DEV_MO		1	// USB Device mode
+#define USB_SPEED_UP		1
+#define BOARD_SUPPORT_RAID	1	// Support DAS-RAID
+#define CHECK_PATTERN1		0x91A2C3D4
+#define CHECK_PATTERN2		0x4D3C2A19
+#define SW_PIPE_SIZE		8192
+//#define RECOVER_FROM_BOOTP	1
+
+#define BOARD_SUPPORT_IDE	1	
+#define BOARD_SUPPORT_IDE0	1	// support IDE-0
+#define BOARD_SUPPORT_IDE1	1	// not support IDE-1
+
+#define BOARD_FLASH_SIZE				(1024 * 1024 * 1024)		//flash size 16 M
+
+#define BOARD_FLASH_BOOTIMG_SIZE		(4 * 64 * 1024)	// include BOOT-1 & BOOT-2
+#define BOARD_FLASH_BOOT_SIZE			(0x100000)	// include BOOT-1 & BOOT-2
+
+#define BOARD_FLASH_BOOT1_ADDR			BOARD_FLASH_BOOT_ADDR
+#define BOARD_FLASH_BOOT1_SIZE			(4 * 1024)	
+#define BOARD_FLASH_BOOT2_ADDR			(BOARD_FLASH_BOOT1_ADDR + BOARD_FLASH_BOOT1_SIZE)
+#define BOARD_FLASH_BOOT2_SIZE			(BOARD_FLASH_BOOTIMG_SIZE - BOARD_FLASH_BOOT1_SIZE)
+
+
+#define BOARD_FLASH_KERNEL_ADDR			(BOARD_FLASH_BASE_ADDR + 0x100000)
+#define BOARD_KERNELIMG_SIZE			(0x002C0000)
+#define BOARD_KERNEL_SIZE				(0x00A00000)
+
+#define BOARD_FLASH_RAM_DISK_ADDR		(BOARD_FLASH_BASE_ADDR + 0xB00000)
+#define BOARD_RAM_DISKIMG_SIZE			(0x00C00000)
+#define BOARD_RAM_DISK_SIZE				(0x01000000)
+			
+#define BOARD_FLASH_APPS_ADDR			(BOARD_FLASH_BASE_ADDR + 0x1B00000)
+#define BOARD_APPSIMG_SIZE				(0x00c00000)
+#define BOARD_APPS_SIZE					(0x01000000)
+
+#define BOARD_FLASH_VCTL_ADDR			(BOARD_FLASH_BASE_ADDR + 0x2B00000)
+#define BOARD_FLASH_VCTLIMG_SIZE		(4 * 64 * 1024)
+#define BOARD_FLASH_VCTL_SIZE			(0x100000)
+#define BOARD_FLASH_CONFIG_ADDR			(BOARD_FLASH_BASE_ADDR + 0x2C00000)
+#define BOARD_FLASH_CONFIGIMG_SIZE		(4 * 64 * 1024)
+#define BOARD_FLASH_CONFIG_SIZE			(0x200000)
+#define BOARD_FLASH_FIS_ADDR			(BOARD_FLASH_BASE_ADDR + 0x2E00000)
+#define BOARD_FLASH_FISIMG_SIZE			(4 * 64 * 1024)
+#define BOARD_FLASH_FIS_SIZE			(0x200000)
+#define BOARD_RESV_ADDR					(BOARD_FLASH_BASE_ADDR + 0x3000000)
+#define BOARD_RESVIMG_SIZE				(0x3D000000)
+#define BOARD_RESV_SIZE					(0x3D000000)
+		
+
+
+
+
+// DRAM memory Map
+///		+--------------------------+
+//      |  		             	   |
+//      |                          |
+//		+--------------------------+
+//		|	  		BOOT2          |  The location could not use 0
+//      |     memory allocation    |  The size must be more large then kernel size
+//		|           area           |  
+//      |   	                   |
+//      |                          |
+//		+--------------------------+
+//      |          BOOT2           | 
+//      |       code + data        |
+//		|                          |
+//      |     			       	   |
+//      |                          |
+//		+--------------------------+
+//      
+
+
+//#define BOARD_BOOT2_MALLOC_SIZE			(32 * 1024 * 1024)
+
+
+
+
+
+
+#endif // _BOARD_CONFIG_H
+
+
